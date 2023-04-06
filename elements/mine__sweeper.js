@@ -26,6 +26,11 @@ function game() {
         table.appendChild(row);
     }
 
+
+    function clickItem(item){
+       
+    }
+
     document.querySelectorAll('.cell').forEach(item => {
         item.addEventListener("click", () => {
             if (item.childElementCount == 1 && over) {
@@ -35,33 +40,31 @@ function game() {
             }
             //null value click control-----------------------------------------------------------
             if (item.innerHTML == "" && over) {
-                var row_id = item.parentElement.id;
-                var column_id = item.id;
-                var row_counter = -1;
-                var x = 1,
-                    y = 1;
-                if (row_id == 0) x = 0;
-                if (row_id == size - 1) row_counter = 0;
-                for (; x >= row_counter; x--) {
-                    if (column_id == 0) y = 0;
-                    var column_counter = -1;
-                    if (column_id == size - 1) column_counter = 0;
-                    for (; y >= column_counter; y--) {
-                        var cell_row = document.querySelectorAll('.row')[row_id - x];
-                        var cell_id = cell_row.querySelectorAll('.cell')[column_id - y];
-                        if (cell_id.innerHTML == "" && cell_id.style.background != "white") {cell_id.click();};
-                        if (cell_id.childElementCount == 1 && over) {
+                var row_id = parseInt(item.parentElement.id);
+                var column_id = parseInt(item.id);
+    
+                const firstC = column_id - 1< 0 ? 0:column_id-1;
+                const firstR = row_id-1 < 0 ? 0:row_id-1;
+                const lastC = column_id+1;
+                const lastR = row_id+1;
+                console.log("lastr = ",lastR," row = ",row_id);
+                for(let i = firstR; i<=lastR;i++){
+                    for(let j = firstC; j<=lastC;j++){
+                        let cell_row=document.querySelectorAll('.row')[i];
+                        let cell_id =  cell_row ? cell_row.querySelectorAll('.cell')[j]:null;
+                        if (cell_id && cell_id.innerHTML == "" && cell_id.style.background != "white"){
+                            cell_id.click();
+                        }
+                        if (cell_id && cell_id.childElementCount == 1 && over)
                             cell_id.querySelectorAll('i').forEach(el => {
                                 el.remove();
                             })
-                        }
-                        cell_id.style.background = "white";
-                        cell_id.style.color = "coral";
-                    }
-                    if (column_id == 0) y = 0;
-                    else y = 1;
+                        if(cell_id){
+                            cell_id.style.background="white";
+                            cell_id.style.color="coral";
+                        }   
+                    }                  
                 }
-                return;
             } else {
                 //Bomb click  controll-------------------------------------------------------
                 if (item.innerHTML == 9 && over) {
